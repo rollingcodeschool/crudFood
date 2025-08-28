@@ -14,6 +14,7 @@
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.1",
+    "react-hook-form": "^7.62.0",
     "react-router": "^7.8.2",
     "sweetalert2": "^11.22.5"
   },
