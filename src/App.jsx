@@ -14,27 +14,29 @@ function App() {
     <>
       <BrowserRouter>
         <Menu></Menu>
-        <Routes>
-          <Route path="/" element={<Inicio></Inicio>} />
-          <Route
-            path="/detalle"
-            element={<DetalleProducto></DetalleProducto>}
-          />
-          <Route path="/login" element={<Login></Login>} />
-          <Route
-            path="/administrador"
-            element={<Administrador></Administrador>}
-          />
-          <Route
-            path="/administrador/crear"
-            element={<FormularioProducto></FormularioProducto>}
-          />
-          <Route
-            path="/administrador/editar"
-            element={<FormularioProducto></FormularioProducto>}
-          />
-          <Route path="*" element={<Error404></Error404>} />
-        </Routes>
+        <main>
+          <Routes>
+            <Route path="/" element={<Inicio></Inicio>} />
+            <Route
+              path="/detalle"
+              element={<DetalleProducto></DetalleProducto>}
+            />
+            <Route path="/login" element={<Login></Login>} />
+            <Route
+              path="/administrador"
+              element={<Administrador></Administrador>}
+            />
+            <Route
+              path="/administrador/crear"
+              element={<FormularioProducto></FormularioProducto>}
+            />
+            <Route
+              path="/administrador/editar"
+              element={<FormularioProducto></FormularioProducto>}
+            />
+            <Route path="*" element={<Error404></Error404>} />
+          </Routes>
+        </main>
         <Footer></Footer>
       </BrowserRouter>
     </>
