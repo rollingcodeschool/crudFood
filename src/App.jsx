@@ -21,7 +21,7 @@ useEffect(()=>{
   return (
     <>
       <BrowserRouter>
-        <Menu></Menu>
+        <Menu usuarioLogueado={usuarioLogueado} setUsuarioLogueado={setUsuarioLogueado}></Menu>
         <main className="container my-3">
           <Routes>
             <Route path="/" element={<Inicio></Inicio>} />
