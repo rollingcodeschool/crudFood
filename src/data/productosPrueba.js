@@ -81,3 +81,5 @@ const productos = [
         imagen: "https://images.pexels.com/photos/1586942/pexels-photo-1586942.jpeg"
     }
 ];
+
+export default productos;
