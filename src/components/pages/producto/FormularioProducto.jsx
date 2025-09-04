@@ -10,11 +10,16 @@ const FormularioProducto = () => {
     formState: { errors },
   } = useForm();
 
+  const onSubmit = (data) =>{
+    //agregar id
+    console.log(data);
+  }
+
   return (
     <section className="container mainSection">
       <h1 className="display-4 mt-5">Crear producto</h1>
       <hr />
-      <Form className="my-4">
+      <Form className="my-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Group className="mb-3" controlId="formNombreProdcuto">
           <Form.Label>Producto*</Form.Label>
           <Form.Control
@@ -47,9 +52,9 @@ const FormularioProducto = () => {
             {...register("precio", {
               required: "El precio es un valor obligatorio",
               min: {
-                value: 50,
+                value: 100,
                 message:
-                  "El precio minimo del producto debe ser de almenos $50",
+                  "El precio minimo del producto debe ser de almenos $100",
               },
               max: {
                 value: 1000000,
