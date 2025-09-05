@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from 'uuid';
 
-const FormularioProducto = ({ titulo, crearProducto }) => {
+
+const FormularioProducto = ({ titulo, crearProducto, buscarProducto, modificarProducto }) => {
   const {
     register,
     handleSubmit,
@@ -11,6 +14,21 @@ const FormularioProducto = ({ titulo, crearProducto }) => {
     setValue,
     formState: { errors },
   } = useForm();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if(titulo === 'Editar Producto'){
+      console.log(id)
+      const productoBuscado = buscarProducto(id)
+      console.log(productoBuscado)
+     setValue('nombreProducto', productoBuscado.nombreProducto)
+     setValue('precio', productoBuscado.precio)
+     setValue('imagen', productoBuscado.imagen)
+     setValue('descripcion_breve', productoBuscado.descripcion_breve)
+     setValue('descripcion_amplia', productoBuscado.descripcion_amplia)
+     setValue('categoria', productoBuscado.categoria)
+    }
+  })
 
   const onSubmit = (data) => {
     if (titulo === "Crear Producto") {

@@ -27,37 +27,44 @@ function App() {
     localStorage.setItem("productosKey", JSON.stringify(productos));
   }, [productos]);
 
-  const crearProducto = (productoNuevo)=>{
-    setProductos([...productos, productoNuevo])
-    return true
-  }
+  const crearProducto = (productoNuevo) => {
+    setProductos([...productos, productoNuevo]);
+    return true;
+  };
 
-  const borrarProducto = (idProducto)=>{
-    const productosFiltrados = productos.filter((itemProducto)=> itemProducto.id !== idProducto)
-    setProductos(productosFiltrados)
-    return true
-  }
+  const borrarProducto = (idProducto) => {
+    const productosFiltrados = productos.filter(
+      (itemProducto) => itemProducto.id !== idProducto
+    );
+    setProductos(productosFiltrados);
+    return true;
+  };
 
-  const buscarProducto = (idProducto)=>{
-    const productoBuscado = productos.find((itemProducto)=> itemProducto.id === idProducto)
-    return productoBuscado
-  }
+  const buscarProducto = (idProducto) => {
+    console.log(idProducto);
+    // const productoBuscado = productos.find(
+    //   (itemProducto) => itemProducto.id === idProducto
+    // );
+    const productoBuscado = productos.find((prod)=> prod.id === idProducto)
+    console.log(productoBuscado);
+    return productoBuscado;
+  };
 
-  const modificarProducto = (idProducto, datosProducto)=>{
-    const productosActualizados = productos.map((itemProducto)=>{
-      if(itemProducto.id === idProducto){
+  const modificarProducto = (idProducto, datosProducto) => {
+    const productosActualizados = productos.map((itemProducto) => {
+      if (itemProducto.id === idProducto) {
         //actualizar el producto
         return {
           ...itemProducto,
-          ...datosProducto
-        }
+          ...datosProducto,
+        };
       }
-      return itemProducto
-    })
+      return itemProducto;
+    });
     //actualizar el state
-    setProductos(productosActualizados)
-    return true
-  }
+    setProductos(productosActualizados);
+    return true;
+  };
 
   return (
     <>
@@ -97,11 +104,22 @@ function App() {
               />
               <Route
                 path="crear"
-                element={<FormularioProducto titulo='Crear Producto' crearProducto={crearProducto}></FormularioProducto>}
+                element={
+                  <FormularioProducto
+                    titulo="Crear Producto"
+                    crearProducto={crearProducto}
+                  ></FormularioProducto>
+                }
               />
               <Route
                 path="editar/:id"
-                element={<FormularioProducto titulo='Editar Producto'></FormularioProducto>}
+                element={
+                  <FormularioProducto
+                    titulo="Editar Producto"
+                    buscarProducto={buscarProducto}
+                    modificarProducto={modificarProducto}
+                  ></FormularioProducto>
+                }
               />
             </Route>
 
