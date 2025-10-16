@@ -1,14 +1,26 @@
-import { Button, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import ItemProducto from "./producto/ItemProducto";
 import { Link } from "react-router";
-import productosPrueba from "../../data/productosPrueba";
+import { useEffect, useState } from "react";
+import { listarProductos } from "../../helpers/queries";
 
+const Administrador = ({ borrarProducto }) => {
+  const [productos, setProductos] = useState([]);
 
-const Administrador = ({setProductos, productos, borrarProducto}) => {
+  useEffect(() => {
+    obtenerProductos();
+  }, []);
 
-  const cargarProductosPrueba =()=>{
-    setProductos(productosPrueba)
-  }
+  const obtenerProductos = async() => {
+    //1-solicitar los datos al backend con la funcion de queries
+    const respuesta = await listarProductos()
+    //2- verificar que los datos llegaron correctamente
+    if(respuesta.status === 200){
+      const datos = await respuesta.json()
+      //3-cargo los productos en el state
+      setProductos(datos)
+    }
+  };
 
   return (
     <section className="container mainSection">
@@ -18,13 +30,6 @@ const Administrador = ({setProductos, productos, borrarProducto}) => {
           <Link className="btn btn-primary me-2" to={"/administrador/crear"}>
             <i className="bi bi-file-earmark-plus"></i>
           </Link>
-          <Button
-            variant="info"
-            className="text-light"
-            onClick={cargarProductosPrueba}
-          >
-            <i className="bi bi-database-fill-up"></i>
-          </Button>
         </div>
       </div>
       <hr />
@@ -40,9 +45,14 @@ const Administrador = ({setProductos, productos, borrarProducto}) => {
           </tr>
         </thead>
         <tbody>
-          {
-            productos.map((itemProducto, indice)=> <ItemProducto itemProducto={itemProducto} key={itemProducto.id} borrarProducto={borrarProducto} fila={indice + 1}></ItemProducto>)
-          }
+          {productos.map((itemProducto, indice) => (
+            <ItemProducto
+              itemProducto={itemProducto}
+              key={itemProducto.id}
+              borrarProducto={borrarProducto}
+              fila={indice + 1}
+            ></ItemProducto>
+          ))}
         </tbody>
       </Table>
     </section>
