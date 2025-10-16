@@ -48,7 +48,7 @@ const Administrador = ({ borrarProducto }) => {
           {productos.map((itemProducto, indice) => (
             <ItemProducto
               itemProducto={itemProducto}
-              key={itemProducto.id}
+              key={itemProducto._id}
               borrarProducto={borrarProducto}
               fila={indice + 1}
             ></ItemProducto>
