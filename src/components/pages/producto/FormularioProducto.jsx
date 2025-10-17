@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from "uuid";
-import { obtenerProductoPorID } from "../../../helpers/queries";
+import { crearProducto, obtenerProductoPorID } from "../../../helpers/queries";
 
 const FormularioProducto = ({
   titulo,
-  crearProducto,
   modificarProducto,
 }) => {
   const {
@@ -44,18 +43,19 @@ const FormularioProducto = ({
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     if (titulo === "Crear Producto") {
       //agregar id
-      data.id = uuidv4();
-      console.log(data);
-      if (crearProducto(data)) {
+      const respuesta = await crearProducto(data)
+      if (respuesta.status === 201) {
         Swal.fire({
           title: "Producto creado",
           text: `El producto ${data.nombreProducto} se creo correctamente`,
           icon: "success",
         });
         reset();
+      }else{
+        alert('Ocurrio un error, intentelo luego.')
       }
     } else {
       //aqui tengo que agregar el editar
