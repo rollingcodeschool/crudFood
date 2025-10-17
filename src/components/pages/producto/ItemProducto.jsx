@@ -40,7 +40,7 @@ const ItemProducto = ({ itemProducto, borrarProducto, fila }) => {
       </td>
       <td>{itemProducto.categoria}</td>
       <td className="text-center">
-        <Link className="me-lg-2 btn btn-warning" to={`/administrador/editar/${itemProducto.id}`}>
+        <Link className="me-lg-2 btn btn-warning" to={`/administrador/editar/${itemProducto._id}`}>
           <i className="bi bi-pencil-square"></i>
         </Link>
         <Button variant="danger" onClick={eliminarProducto}>
