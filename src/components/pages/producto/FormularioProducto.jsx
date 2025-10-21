@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from "uuid";
-import { crearProducto, obtenerProductoPorID } from "../../../helpers/queries";
+import { crearProducto, editarProductoAPI, obtenerProductoPorID } from "../../../helpers/queries";
 
 const FormularioProducto = ({
   titulo,
@@ -44,6 +44,7 @@ const FormularioProducto = ({
   };
 
   const onSubmit = async(data) => {
+    console.log(data)
     if (titulo === "Crear Producto") {
       //agregar id
       const respuesta = await crearProducto(data)
@@ -59,7 +60,8 @@ const FormularioProducto = ({
       }
     } else {
       //aqui tengo que agregar el editar
-      if (modificarProducto(id, data)) {
+      const respuesta = await editarProductoAPI(id, data)
+      if (respuesta.status === 200) {
         //mostrar un cartel de producto modificado
         Swal.fire({
           title: "Producto modificado",

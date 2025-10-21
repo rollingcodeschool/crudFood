@@ -23,6 +23,23 @@ export const obtenerProductoPorID = async (id)=>{
         return null
     }
 }
+export const editarProductoAPI = async (id, producto)=>{
+    try {
+        const respuesta = await fetch(productosBackend+'/'+id,{
+            method: 'PUT',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(producto)
+        })
+        console.log(respuesta)
+        return respuesta
+    } catch (error) {
+        console.error(error)
+        return null
+    }
+}
+
 export const crearProducto = async (producto)=>{
     try {
         console.log(producto)
