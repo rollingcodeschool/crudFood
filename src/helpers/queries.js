@@ -28,7 +28,8 @@ export const editarProductoAPI = async (id, producto)=>{
         const respuesta = await fetch(productosBackend+'/'+id,{
             method: 'PUT',
             headers:{
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'x-token': JSON.parse(sessionStorage.getItem('usuarioKey')).token
             },
             body: JSON.stringify(producto)
         })
@@ -42,7 +43,10 @@ export const editarProductoAPI = async (id, producto)=>{
 export const borrarProductoAPI = async (id)=>{
     try {
         const respuesta = await fetch(productosBackend+'/'+id,{
-            method: 'DELETE'
+            method: 'DELETE',
+            headers:{
+                'x-token': JSON.parse(sessionStorage.getItem('usuarioKey')).token
+            }
         })
         console.log(respuesta)
         return respuesta
@@ -58,7 +62,8 @@ export const crearProducto = async (producto)=>{
         const respuesta = await fetch(productosBackend,{
             method: 'POST',
             headers:{
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'x-token': JSON.parse(sessionStorage.getItem('usuarioKey')).token
             },
             body: JSON.stringify(producto)
         })
