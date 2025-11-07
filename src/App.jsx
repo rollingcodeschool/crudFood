@@ -14,7 +14,7 @@ BrowserRouter;
 
 function App() {
   const sesionUsuario =
-    JSON.parse(sessionStorage.getItem("usuarioKey")) || false;
+    JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
   const productosLS = JSON.parse(localStorage.getItem("productosKey")) || [];
   const [usuarioLogueado, setUsuarioLogueado] = useState(sesionUsuario);
   const [productos, setProductos] = useState(productosLS);
@@ -77,7 +77,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Inicio></Inicio>} />
             <Route
-              path="/detalle"
+              path="/detalle/:id"
               element={<DetalleProducto></DetalleProducto>}
             />
             <Route

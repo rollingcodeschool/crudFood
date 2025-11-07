@@ -1,7 +1,7 @@
 import { Col, Card } from "react-bootstrap";
 import { Link } from "react-router";
 
-const CardProducto = () => {
+const CardProducto = ({itemProducto}) => {
   return (
     <Col md={4} lg={3} className="mb-3">
       <Card className="h-100">
@@ -13,15 +13,15 @@ const CardProducto = () => {
           />
         </div>
         <Card.Body>
-          <Card.Title>Pizza Margarita Clásica</Card.Title>
+          <Card.Title>{itemProducto.nombreProducto}</Card.Title>
           <Card.Text>
-            Pizza tradicional con salsa de tomate, mozzarella y albahaca.
+            {itemProducto.descripcion_breve}
             <br className="mb-2" />
-            <span className="fw-bold">Precio: $4500</span>
+            <span className="fw-bold">Precio: ${itemProducto.precio}</span>
           </Card.Text>
         </Card.Body>
         <Card.Footer className="text-end">
-          <Link className="me-2 btn btn-success" to={'/detalle/' }>
+          <Link className="me-2 btn btn-success" to={`/detalle/:${itemProducto._id}` }>
             Ver más
           </Link>
         </Card.Footer>

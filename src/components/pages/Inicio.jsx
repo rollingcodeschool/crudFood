@@ -1,7 +1,24 @@
 import { Container, Form, Row } from "react-bootstrap";
 import CardProducto from "./producto/CardProducto";
+import { useEffect, useState } from "react";
+import { listarProductos } from "../../helpers/queries";
 
 const Inicio = () => {
+  const [productos, setProductos] = useState([]);
+  useEffect(() => {
+    obtenerProductos();
+  }, []);
+
+  const obtenerProductos = async () => {
+    //1-solicitar los datos al backend con la funcion de queries
+    const respuesta = await listarProductos();
+    //2- verificar que los datos llegaron correctamente
+    if (respuesta.status === 200) {
+      const datos = await respuesta.json();
+      //3-cargo los productos en el state
+      setProductos(datos);
+    }
+  };
   return (
     <section>
       <img
@@ -22,7 +39,13 @@ const Inicio = () => {
           </Form.Group>
         </Form>
         <Row>
-          <CardProducto></CardProducto>
+          {productos.map((itemProducto) => (
+            <CardProducto
+              itemProducto={itemProducto}
+              key={itemProducto._id}
+            ></CardProducto>
+          ))}
+
           {/* <p>No hay productos disponibles</p> */}
         </Row>
       </Container>

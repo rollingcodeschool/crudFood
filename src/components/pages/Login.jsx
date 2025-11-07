@@ -17,7 +17,11 @@ const Login = ({ setUsuarioLogueado }) => {
     if (respuesta.status === 200) {
       //aqui logueo al usuario
       //1- actualizar el estado
-      setUsuarioLogueado(true);
+      const datos = await respuesta.json();
+      setUsuarioLogueado({
+        usuario: datos.usuario,
+        token: datos.token,
+      });
       //2- redireccionar a la pagina del administrador
       Swal.fire({
         title: "Bienvenido Administrador",
