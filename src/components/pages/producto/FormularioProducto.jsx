@@ -1,71 +1,83 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
-import { v4 as uuidv4 } from "uuid";
-import { crearProducto, editarProductoAPI, obtenerProductoPorID } from "../../../helpers/queries";
+import "./FormularioProducto.css";
 
-const FormularioProducto = ({
-  titulo,
-  modificarProducto,
-}) => {
+import {
+  crearProducto,
+  editarProductoAPI,
+  obtenerProductoPorID,
+} from "../../../helpers/queries";
+
+const FormularioProducto = ({ titulo }) => {
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    resetField,
     formState: { errors },
   } = useForm();
   const { id } = useParams();
   const navegacion = useNavigate();
 
+  const [imagenActual, setImagenActual] = useState("");
+  const [preview, setPreview] = useState("");
+
   useEffect(() => {
-    buscarProducto();
-  });
+    if(titulo === 'Editar Producto'){
+      buscarProducto();
+    }
+  },[]);
 
   const buscarProducto = async () => {
-    if (titulo === "Editar Producto") {
-      console.log(id);
       const respuesta = await obtenerProductoPorID(id);
       if (respuesta.status === 200) {
         const productoBuscado = await respuesta.json();
-        console.log(productoBuscado);
         setValue("nombreProducto", productoBuscado.nombreProducto);
         setValue("precio", productoBuscado.precio);
-        setValue("imagen", productoBuscado.imagen);
         setValue("descripcion_breve", productoBuscado.descripcion_breve);
         setValue("descripcion_amplia", productoBuscado.descripcion_amplia);
         setValue("categoria", productoBuscado.categoria);
-      }else{
-        alert('ocurrio un error intentelo mas tarde')
+        // setValue("imagen", productoBuscado.imagen);
+        setImagenActual(productoBuscado.imagen);
+      } else {
+        alert("ocurrio un error intentelo mas tarde");
       }
-    }
+    
   };
 
-  const onSubmit = async(data) => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    console.log(data);
+    const productoForm = {
+      ...data,
+      imagen: data.imagen[0], // File
+    };
+
+
     if (titulo === "Crear Producto") {
       //agregar id
-      const respuesta = await crearProducto(data)
+      const respuesta = await crearProducto(productoForm);
       if (respuesta.status === 201) {
         Swal.fire({
           title: "Producto creado",
-          text: `El producto ${data.nombreProducto} se creo correctamente`,
+          text: `El producto ${productoForm.nombreProducto} se creo correctamente`,
           icon: "success",
         });
         reset();
-      }else{
-        alert('Ocurrio un error, intentelo luego.')
+      } else {
+        alert("Ocurrio un error, intentelo luego.");
       }
     } else {
       //aqui tengo que agregar el editar
-      const respuesta = await editarProductoAPI(id, data)
+      const respuesta = await editarProductoAPI(id, productoForm);
       if (respuesta.status === 200) {
         //mostrar un cartel de producto modificado
         Swal.fire({
           title: "Producto modificado",
-          text: `El producto ${data.nombreProducto} se actualizo correctamente`,
+          text: `El producto ${productoForm.nombreProducto} se actualizo correctamente`,
           icon: "success",
         });
         //redireccionar a la tabla del administrador
@@ -74,7 +86,7 @@ const FormularioProducto = ({
         //sin no se modifico mostrar un mensaje de error
         Swal.fire({
           title: "Ocurrio un error",
-          text: `No se pudo actualizar el producto ${data.nombreProducto}`,
+          text: `No se pudo actualizar el producto ${productoForm.nombreProducto}`,
           icon: "error",
         });
       }
@@ -136,19 +148,51 @@ const FormularioProducto = ({
         <Form.Group className="mb-3" controlId="formImagen">
           <Form.Label>Imagen URL*</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Ej: https://www.pexels.com/es-es/pizza/"
+            type="file"
+            accept="image/*"
             {...register("imagen", {
-              required: "La url de la imagen es un dato obligatorio",
-              pattern: {
-                value:
-                  /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\.(jpg|jpeg|png|webp))$/,
-                message:
-                  "La imagen debe ser una url de imagen valida terminada en (jpg|jpeg|png|webp)",
+              required:
+                titulo === "Crear Producto"
+                  ? "La imagen es obligatoria"
+                  : false,
+              validate: {
+                fileSize: (files) =>
+                  !files[0] ||
+                  files[0].size <= 2 * 1024 * 1024 ||
+                  "La imagen no debe superar los 2MB.",
               },
             })}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setPreview(URL.createObjectURL(file)); //crea una URL temporal en el navegador
+              } else {
+                setPreview("");
+              }
+            }}
           />
-          <Form.Text className="text-danger">
+          {(preview || imagenActual) && (
+            <div className="mb-2 position-relative d-inline-block mt-3">
+              <img
+                className="rounded-3 img-preview"
+                src={preview || imagenActual}
+                alt="Imagen"
+              />
+              <Button
+                variant="light"
+                size="sm"
+                className="p-0 d-flex align-items-center justify-content-center shadow btn-img-preview"
+                onClick={() => {
+                  setPreview("");
+                  setImagenActual("");
+                  resetField("imagen");
+                }}
+              >
+                <i className="bi bi-x fs-5 text-danger"></i>
+              </Button>
+            </div>
+          )}
+          <Form.Text className="ms-2 text-danger">
             {errors.imagen?.message}
           </Form.Text>
         </Form.Group>
