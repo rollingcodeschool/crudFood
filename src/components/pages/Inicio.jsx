@@ -5,6 +5,7 @@ import { listarProductos } from "../../helpers/queries";
 
 const Inicio = () => {
   const [productos, setProductos] = useState([]);
+  const [terminoBusqueda, setTerminoBusqueda] = useState("");
   useEffect(() => {
     obtenerProductos();
   }, []);
@@ -19,6 +20,15 @@ const Inicio = () => {
       setProductos(datos);
     }
   };
+
+  const handleInputChange = (e) => {
+    setTerminoBusqueda(e.target.value);
+  };
+
+  const productosFiltrados = productos.filter((producto) => 
+    producto.nombreProducto.toLowerCase().includes(terminoBusqueda.toLowerCase())
+  );
+
   return (
     <section>
       <img
@@ -35,18 +45,22 @@ const Inicio = () => {
             <Form.Control
               type="text"
               placeholder="Ingresa el nombre del producto"
+              onChange={handleInputChange}
+              value={terminoBusqueda}
             />
           </Form.Group>
         </Form>
         <Row>
-          {productos.map((itemProducto) => (
+          {
+          productosFiltrados.length > 0?
+          productosFiltrados.map((itemProducto) => (
             <CardProducto
               itemProducto={itemProducto}
               key={itemProducto._id}
             ></CardProducto>
-          ))}
-
-          {/* <p>No hay productos disponibles</p> */}
+          ))
+          :  <p>No hay productos disponibles</p>
+          }
         </Row>
       </Container>
     </section>

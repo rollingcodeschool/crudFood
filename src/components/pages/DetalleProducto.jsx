@@ -42,7 +42,8 @@ const DetalleProducto = () => {
               <hr />
               <Card.Text className="fs-5">
                 {producto.descripcion_amplia}
-                <br />
+              </Card.Text>
+              <Card.Text className="fs-5">
                 <span className="fw-semibold">Categoria:</span>{" "}
                 {producto.categoria}
                 <br className="mb-3" />
