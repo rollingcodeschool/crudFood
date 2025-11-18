@@ -27,26 +27,25 @@ const FormularioProducto = ({ titulo }) => {
   const [preview, setPreview] = useState("");
 
   useEffect(() => {
-    if(titulo === 'Editar Producto'){
+    if (titulo === "Editar Producto") {
       buscarProducto();
     }
-  },[]);
+  }, []);
 
   const buscarProducto = async () => {
-      const respuesta = await obtenerProductoPorID(id);
-      if (respuesta.status === 200) {
-        const productoBuscado = await respuesta.json();
-        setValue("nombreProducto", productoBuscado.nombreProducto);
-        setValue("precio", productoBuscado.precio);
-        setValue("descripcion_breve", productoBuscado.descripcion_breve);
-        setValue("descripcion_amplia", productoBuscado.descripcion_amplia);
-        setValue("categoria", productoBuscado.categoria);
-        // setValue("imagen", productoBuscado.imagen);
-        setImagenActual(productoBuscado.imagen);
-      } else {
-        alert("ocurrio un error intentelo mas tarde");
-      }
-    
+    const respuesta = await obtenerProductoPorID(id);
+    if (respuesta.status === 200) {
+      const productoBuscado = await respuesta.json();
+      setValue("nombreProducto", productoBuscado.nombreProducto);
+      setValue("precio", productoBuscado.precio);
+      setValue("descripcion_breve", productoBuscado.descripcion_breve);
+      setValue("descripcion_amplia", productoBuscado.descripcion_amplia);
+      setValue("categoria", productoBuscado.categoria);
+      // setValue("imagen", productoBuscado.imagen);
+      setImagenActual(productoBuscado.imagen);
+    } else {
+      alert("ocurrio un error intentelo mas tarde");
+    }
   };
 
   const onSubmit = async (data) => {
@@ -55,7 +54,7 @@ const FormularioProducto = ({ titulo }) => {
       ...data,
       imagen: data.imagen[0], // File
     };
-
+    console.log(productoForm);
 
     if (titulo === "Crear Producto") {
       //agregar id
@@ -67,6 +66,7 @@ const FormularioProducto = ({ titulo }) => {
           icon: "success",
         });
         reset();
+        setPreview('')
       } else {
         alert("Ocurrio un error, intentelo luego.");
       }
