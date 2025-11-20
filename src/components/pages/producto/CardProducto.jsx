@@ -7,8 +7,8 @@ const CardProducto = ({itemProducto}) => {
       <Card className="h-100">
         <div>
           <img
-            src="https://images.pexels.com/photos/2619970/pexels-photo-2619970.jpeg"
-            alt='pizza'
+            src={itemProducto.imagen}
+            alt={itemProducto.nombreProducto}
             className="card-img-top-nueva"
           />
         </div>
