@@ -1,27 +1,47 @@
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import ItemProducto from "./producto/ItemProducto";
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
-import { listarProductos } from "../../helpers/queries";
+import {
+  leerProductosPaginadosAPI,
+  listarProductos,
+} from "../../helpers/queries";
 
 const Administrador = ({ borrarProducto }) => {
-  const [productos, setProductos] = useState([]);
+  // const [productos, setProductos] = useState([]);
+  const [listaProductos, setListaProductos] = useState([]); //almacena los productos de la página actual.
+  const [page, setPage] = useState(1); //número de página actual
+  const [limit] = useState(10); //cantidad de productos por página (fijo en 10).
+  const [totalPages, setTotalPages] = useState(1); //total de páginas disponibles (lo devuelve el backend).
 
   useEffect(() => {
-    obtenerProductos();
-  }, []);
+    obtenerProductosPaginados(page, limit);
+  }, [page, limit]);
 
-  const obtenerProductos = async() => {
-    //1-solicitar los datos al backend con la funcion de queries
-    const respuesta = await listarProductos()
-    //2- verificar que los datos llegaron correctamente
-    if(respuesta.status === 200){
-      const datos = await respuesta.json()
-      //3-cargo los productos en el state
-      setProductos(datos)
+  // const obtenerProductos = async() => {
+  //   //1-solicitar los datos al backend con la funcion de queries
+  //   const respuesta = await listarProductos()
+  //   //2- verificar que los datos llegaron correctamente
+  //   if(respuesta.status === 200){
+  //     const datos = await respuesta.json()
+  //     //3-cargo los productos en el state
+  //     setProductos(datos)
+  //   }
+  // };
+  const obtenerProductosPaginados = async (pagina, limite) => {
+    const respuesta = await leerProductosPaginadosAPI(pagina, limite);
+    if (respuesta && respuesta.status === 200) {
+      const datos = await respuesta.json();
+      setListaProductos(datos.productos);
+      setTotalPages(datos.cantPaginas || 1);
+    } else {
+      Swal.fire({
+        title: "Ocurrio un error",
+        text: `En estos momentos no podemos mostrar los productos, intenta en breve.`,
+        icon: "error",
+      });
     }
   };
-
   return (
     <section className="container mainSection">
       <div className="d-flex justify-content-between align-items-center mt-5">
@@ -45,17 +65,39 @@ const Administrador = ({ borrarProducto }) => {
           </tr>
         </thead>
         <tbody>
-          {productos.map((itemProducto, indice) => (
+          {listaProductos.map((itemProducto, indice) => (
             <ItemProducto
               itemProducto={itemProducto}
               key={itemProducto._id}
               borrarProducto={borrarProducto}
-              fila={indice + 1}
-              setProductos={setProductos}
+              fila={(page - 1) * limit + indice + 1}
+              setListaProductos={setListaProductos}
+              page={page}
+              limit={limit}
             ></ItemProducto>
           ))}
         </tbody>
       </Table>
+      {/* Controles de paginación */}
+      <div className="d-flex justify-content-center align-items-center my-3">
+        <Button
+          variant="secondary"
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))} // aseguras de que el nuevo valor se calcule siempre a partir del estado más reciente y correcto
+          disabled={page === 1}
+        >
+          Anterior
+        </Button>
+        <span className="mx-3">
+          Página {page} de {totalPages}
+        </span>
+        <Button
+          variant="secondary"
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+        >
+          Siguiente
+        </Button>
+      </div>
     </section>
   );
 };

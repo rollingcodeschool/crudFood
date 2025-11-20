@@ -1,5 +1,6 @@
 const productosBackend = import.meta.env.VITE_API_PRODUCTOS;
 const usuariosBackend = import.meta.env.VITE_API_USUARIOS;
+const URLProductoPaginados = productosBackend + "/paginacion";
 
 console.log(productosBackend);
 
@@ -41,7 +42,7 @@ export const editarProductoAPI = async (id, producto) => {
       headers: {
         "x-token": JSON.parse(sessionStorage.getItem("usuarioKey")).token,
       },
-      body: formData
+      body: formData,
     });
     console.log(respuesta);
     return respuesta;
@@ -105,5 +106,17 @@ export const login = async (usuario) => {
   } catch (error) {
     console.error(error);
     return null;
+  }
+};
+
+export const leerProductosPaginadosAPI = async (page = 1, limit = 10) => {
+  try {
+    const respuesta = await fetch(
+      `${URLProductoPaginados}?page=${page}&limit=${limit}`
+    );
+    return respuesta;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 };

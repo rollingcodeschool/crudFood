@@ -1,9 +1,9 @@
 import { Button } from "react-bootstrap";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
-import {borrarProductoAPI, listarProductos} from '../../../helpers/queries'
+import {borrarProductoAPI, leerProductosPaginadosAPI, listarProductos} from '../../../helpers/queries'
 
-const ItemProducto = ({ itemProducto, fila, setProductos }) => {
+const ItemProducto = ({ itemProducto, fila, setListaProductos, page, limit }) => {
   
   const eliminarProducto =  () => {
     Swal.fire({
@@ -24,11 +24,12 @@ const ItemProducto = ({ itemProducto, fila, setProductos }) => {
             text: `El producto fue eliminado correctamente`,
             icon: "success",
           });
-          const respuestaProductos = await listarProductos()
+          const respuestaProductos = await leerProductosPaginadosAPI(page, limit)
+    
           if(respuestaProductos.status === 200){
             const productosRestantes = await respuestaProductos.json()
             console.log(productosRestantes)
-            setProductos(productosRestantes)
+            setListaProductos(productosRestantes)
           }
         }else{
            Swal.fire({
